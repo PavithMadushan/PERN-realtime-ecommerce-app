@@ -6,6 +6,7 @@ import {
   UserButton,
 } from "@clerk/react";
 import PageLoader from "./components/PageLoader";
+import Layout from "./components/Layout";
 
 function App() {
   const { isLoaded } = useAuth();
@@ -15,7 +16,7 @@ function App() {
   }
 
   return (
-    <>
+    <Layout>
       <header>
         <Show when="signed-out">
           <SignInButton mode="modal" />
@@ -30,7 +31,7 @@ function App() {
       <button className="btn btn-primary">Click me</button>
       <button className="btn btn-secondary">Click me</button>
       <button className="btn btn-out-line">Click me</button>
-    </>
+    </Layout>
   );
 }
 
