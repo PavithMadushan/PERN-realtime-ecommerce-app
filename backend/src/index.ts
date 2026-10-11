@@ -37,6 +37,11 @@ app.post("/webhooks/polar", rawJson, (req, res) => {
   void polarWebhookHandler(req, res);
 });
 
+app.use(express.json());
+app.use(cors());
+app.use(clerkMiddleware());
+app.use(sentryClerkUserMiddleware);
+
 app.get("/health", (_req, res) => {
   res.json({ ok: true });
 });
@@ -47,11 +52,6 @@ app.use("/api/stream", streamRouter);
 app.use("/api/checkout", checkoutRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/orders", orderRouter);
-
-app.use(express.json());
-app.use(cors());
-app.use(clerkMiddleware());
-app.use(sentryClerkUserMiddleware);
 
 const publicDir = path.join(process.cwd(), "public");
 if (fs.existsSync(publicDir)) {
@@ -76,7 +76,12 @@ if (fs.existsSync(publicDir)) {
 Sentry.setupExpressErrorHandler(app);
 //todo: add error handler middleware
 app.use(
-  (_err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  (
+    _err: unknown,
+    _req: express.Request,
+    res: express.Response,
+    _next: express.NextFunction,
+  ) => {
     const sentryId = (res as express.Response & { sentry?: string }).sentry;
 
     res.status(500).json({
@@ -85,7 +90,6 @@ app.use(
     });
   },
 );
-
 
 app.listen(env.PORT, () => {
   console.log("Listening on port:", env.PORT);
