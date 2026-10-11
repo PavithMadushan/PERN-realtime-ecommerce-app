@@ -1,5 +1,6 @@
 import { useHomeCatalog } from "../hooks/useHomeCatalog";
 import { HomeHero } from "../components/HomeHero";
+import { TrustStrip } from "../components/TrustStrip";
 
 function HomePage() {
   const {
@@ -15,6 +16,7 @@ function HomePage() {
   return (
     <div className="space-y-12">
       <HomeHero categories={categories} loadingCategories={loadingCategories} />
+      <TrustStrip />
     </div>
   );
 }
