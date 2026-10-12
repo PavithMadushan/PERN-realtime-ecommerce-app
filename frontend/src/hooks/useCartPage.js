@@ -1,8 +1,9 @@
 import { useAuth } from "@clerk/react";
 
 import { useCart } from "../store/cart";
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "../lib/api";
+import { useState } from "react";
 
 export default function useCartPage() {
   const { getToken } = useAuth();
@@ -15,7 +16,7 @@ export default function useCartPage() {
   const {
     data,
     isLoading: productsLoading,
-    isError: productError,
+    isError: productsError,
   } = useQuery({
     queryKey: ["products"],
     queryFn: () => apiFetch("/api/products"),
@@ -38,13 +39,10 @@ export default function useCartPage() {
     setCheckoutLoading(true);
 
     const body = {
-      items: items.map((i) => ({
-        productId: i.productId,
-        quantity: i.quantity,
-      })),
+      items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
     };
 
-    const res = await fetch("/api/checkout", {
+    const res = await apiFetch("/api/checkout", {
       getToken,
       method: "POST",
       body,
@@ -63,8 +61,7 @@ export default function useCartPage() {
     setQty,
     removeItem,
     productsLoading,
-    productError,
-
+    productsError,
     lines,
     subtotal,
     checkout,
